@@ -21,6 +21,13 @@
 
     <!-- Template Main CSS File -->
     <link href="{% static 'Plagiarism_Seeker/assets/css/style.css' %}" rel="stylesheet">
+
+    <style>
+        th,
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -71,39 +78,6 @@
     </section><!-- End Hero -->
 
     <main id="main">
-        <!-- ======= About Section ======= -->
-        <section id="about" class="about">
-            <div class="container" data-aos="fade-up">
-                <div class="row gx-0">
-                    <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up"
-                        data-aos-delay="200">
-                        <div class="content">
-                            <h3>About Us</h3>
-                            <h2>Our AI technology looks for potential issues with phrases that are identical,
-                                similar and even paraphrased,
-                                ensuring that your papers are always 100% plagiarism-free.</h2>
-                            <p>
-                                We support all major file formats including doc, docx, pdf and many more. Our technology
-                                scans the text in each file and checks if any identical or similar content has been
-                                found.
-                            </p>
-                            <div class="text-center text-lg-start">
-                                <a href="#values"
-                                    class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center">
-                                    <span>Get Started</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
-                        <img src="{% static 'Plagiarism_Seeker/assets/img/lol.jpg' %}" class="img-fluid" alt="">
-                    </div>
-                </div>
-            </div>
-        </section><!-- End About Section -->
-
         <!-- ======= Values Section ======= -->
         <section id="values" class="values">
             <div class="container" data-aos="fade-up">
@@ -160,6 +134,9 @@
                                             <div class="col-md-12"><input id="image_id" type="file" class="form-control"
                                                     name="image"></div>
                                         </div>
+                                        <div class="text-right mt-4">
+                                            <button type="button" class="sw-btn-add btn btn-primary">Add</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -169,6 +146,175 @@
             </div>
         </div>
         <!-- End of plagiarism -->
+
+        {% if question_result %}
+        <div class="px-lg-4">
+            <section class="values p-0 mt-5">
+                <div class="container" data-aos="fade-up">
+                    <header class="section-header">
+                        <p>Plagiarism Result For Question!</p>
+                    </header>
+                </div>
+            </section><!-- End Values Section -->
+
+            <table class="table table-hover" data-aos="fade-up">
+                <thead>
+                    <tr>
+                        <th width="85%" scope="col">Sources</th>
+                        <th width="15%" scope="col">Percent Plagiarism</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for key,value in question_result.items %}
+                        {% if key == 'sources' %}
+                        <td>
+                            <table class="table table-hover mt-5">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">URL</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Matches</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for key,value in value.0.items %}
+                                        {% if key == 'matches' %}
+                                        <td>
+                                            <table class="table table-hover mt-5">
+                                                <tr>
+                                                    <th>Input Start</th>
+                                                    <th>Input End</th>
+                                                    <th>Match Text</th>
+                                                    <th>Context</th>
+                                                    <th>Score</th>
+                                                </tr>
+                                                <tr>
+                                                    {% for key,value in value.0.items %}
+                                                    <td>{{ value }}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        {% else %}
+                                        <td>{{ value }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        {% else %}
+                        <td>{{ value }} %</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if image_result %}
+        <div class="px-lg-4">
+            <section class="values p-0 mt-5">
+                <div class="container" data-aos="fade-up">
+                    <header class="section-header">
+                        <p>Plagiarism Result For Image!</p>
+                    </header>
+                </div>
+            </section><!-- End Values Section -->
+
+            <table class="table table-hover px-lg-2" data-aos="fade-up">
+                <thead>
+                    <tr>
+                        <th scope="col">Sources</th>
+                        <th scope="col">Percent Plagiarism</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for key,value in question_result.items %}
+                        {% if key == 'sources' %}
+                        <td>
+                            <table class="table table-hover mt-5">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">URL</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Matches</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for key,value in value.0.items %}
+                                        {% if key == 'matches' %}
+                                        <td>
+                                            <table class="table table-hover mt-5">
+                                                <tr>
+                                                    <th>Input Start</th>
+                                                    <th>Input End</th>
+                                                    <th>Match Text</th>
+                                                    <th>Context</th>
+                                                    <th>Score</th>
+                                                </tr>
+                                                <tr>
+                                                    {% for key,value in value.0.items %}
+                                                    <td>{{ value }}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        {% else %}
+                                        <td>{{ value }}</td>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        {% else %}
+                        <td>{{ value }} %</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+
+        <!-- ======= About Section ======= -->
+        <section id="about" class="about">
+            <div class="container" data-aos="fade-up">
+                <div class="row gx-0">
+                    <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up"
+                        data-aos-delay="200">
+                        <div class="content">
+                            <h3>About Us</h3>
+                            <h2>Our AI technology looks for potential issues with phrases that are identical,
+                                similar and even paraphrased,
+                                ensuring that your papers are always 100% plagiarism-free.</h2>
+                            <p>
+                                We support all major file formats including doc, docx, pdf and many more. Our technology
+                                scans the text in each file and checks if any identical or similar content has been
+                                found.
+                            </p>
+                            <div class="text-center text-lg-start">
+                                <a href="#values"
+                                    class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center">
+                                    <span>Get Started</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
+                        <img src="{% static 'Plagiarism_Seeker/assets/img/lol.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </section><!-- End About Section -->
 
         <!-- ======= Services Section ======= -->
         <section id="services" class="services">
@@ -317,7 +463,7 @@
 
     <!-- Template Main JS File -->
     <script src="{% static 'Plagiarism_Seeker/assets/js/main.js' %}"></script>
-        
+
 </body>
 
 </html>

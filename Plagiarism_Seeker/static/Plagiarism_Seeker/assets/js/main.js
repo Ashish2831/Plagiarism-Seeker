@@ -319,6 +319,8 @@
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>`
+                                } else {
+                                    questionForm.submit();
                                 }
                             })
                         } else {
@@ -328,15 +330,6 @@
                 })
             }
         }
-        nextBtn.addEventListener('click', () => {
-            nextBtn.innerHTML = 'Add';
-            nextBtn.classList.add('sw-btn-add');
-            add();
-        })
-        prevBtn.addEventListener('click', () => {
-            nextBtn.innerHTML = 'Next';
-            nextBtn.classList.remove('sw-btn-add');
-            add();
-        })
+        add();
     });
 })();
