@@ -64,8 +64,6 @@ section {
   }
 }
 
-
-
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -637,36 +635,6 @@ section {
   background: #fff;
 }
 
-
-/*--------------------------------------------------------------
-# Contact
---------------------------------------------------------------*/
-.contact .info-box {
-  color: #444444;
-  background: #fafbff;
-  padding: 30px;
-}
-
-.contact .info-box i {
-  font-size: 38px;
-  line-height: 0;
-  color: #2b7a78;
-}
-
-.contact .info-box h3 {
-  font-size: 20px;
-  color: #3aafa9;
-  font-weight: 700;
-  margin: 20px 0 10px 0;
-}
-
-.contact .info-box p {
-  padding: 0;
-  line-height: 24px;
-  font-size: 14px;
-  margin-bottom: 0;
-}
-
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
@@ -836,4 +804,35 @@ section {
 
 .footer .footer-top .footer-contact p {
   line-height: 26px;
+}
+
+.result {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.result td,
+.result th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.result td img {
+  cursor: pointer;
+}
+
+.result tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.result tr:hover {
+  background-color: #ddd;
+}
+
+.result th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #2dc28b;
+  color: white;
 }

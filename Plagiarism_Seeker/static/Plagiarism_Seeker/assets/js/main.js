@@ -331,5 +331,26 @@
             }
         }
         add();
+
+        if (document.getElementById('question_result')) {
+            $(() => {
+                $('html, body').animate({
+                    scrollTop: $('#question_result').offset().top
+                }, 1000);
+            });
+        }
+
+        const deleteQuestions = document.getElementsByClassName("deletequestion");
+        Array.from(deleteQuestions).forEach((element) => {
+            element.addEventListener('click', (event) => {
+                if (!confirm("Are you sure you want to delete this question?")) {
+                    event.preventDefault();
+                }
+            })
+        })
+
+        document.getElementById('launchModalBtn').addEventListener('click', () => {
+            questionForm.action = '';
+        })
     });
 })();

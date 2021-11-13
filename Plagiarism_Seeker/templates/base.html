@@ -41,11 +41,10 @@
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+                    <li><a class="nav-link scrollto active" href="#">Home</a></li>
                     <li><a class="nav-link scrollto" href="#about">About</a></li>
                     <li><a class="nav-link scrollto" href="#services">Services</a></li>
-
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    <li><a class="nav-link scrollto" href="#database">Database</a></li>
                     <li><a class="getstarted scrollto" href="#values">Get Started</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
@@ -101,8 +100,7 @@
 
         <!-- Plagiarism section -->
         <div class="container">
-            <div class="row d-flex justify-content-center mt-200"> <button type="button" class="btn btn-primary"
-                    data-toggle="modal" data-target="#exampleModal"> Launch Modal To Add Question </button> </div>
+            <div class="row d-flex justify-content-center mt-200"> <button id="launchModalBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> Launch Modal To Add Question </button> </div>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -117,8 +115,8 @@
                             <form id="question_form" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <ul>
-                                    <li><a href="#step-1">Step 1<br /><small>Question</small></a></li>
-                                    <li><a href="#step-2">Step 2<br /><small>Image If Required</small></a></li>
+                                    <li style="width: 50%;"><a href="#step-1">Step 1<br /><small>Question</small></a></li>
+                                    <li style="width: 50%;"><a href="#step-2">Step 2<br /><small>Image If Required</small></a></li>
                                 </ul>
                                 <h6 id="question_error" class="mt-2"></h6>
                                 <div class="mt-4">
@@ -148,7 +146,7 @@
         <!-- End of plagiarism -->
 
         {% if question_result %}
-        <div class="px-lg-4">
+        <div id="question_result" class="px-lg-4">
             <section class="values p-0 mt-5">
                 <div class="container" data-aos="fade-up">
                     <header class="section-header">
@@ -157,7 +155,7 @@
                 </div>
             </section><!-- End Values Section -->
 
-            <table class="table table-hover" data-aos="fade-up">
+            <table class="table table-hover result" data-aos="fade-up">
                 <thead>
                     <tr>
                         <th width="85%" scope="col">Sources</th>
@@ -216,7 +214,7 @@
         {% endif %}
 
         {% if image_result %}
-        <div class="px-lg-4">
+        <div id="image_result" class="px-lg-4">
             <section class="values p-0 mt-5">
                 <div class="container" data-aos="fade-up">
                     <header class="section-header">
@@ -225,7 +223,7 @@
                 </div>
             </section><!-- End Values Section -->
 
-            <table class="table table-hover px-lg-2" data-aos="fade-up">
+            <table class="table table-hover px-lg-2 result" data-aos="fade-up">
                 <thead>
                     <tr>
                         <th scope="col">Sources</th>
@@ -234,7 +232,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        {% for key,value in question_result.items %}
+                        {% for key,value in image_result.items %}
                         {% if key == 'sources' %}
                         <td>
                             <table class="table table-hover mt-5">
@@ -280,7 +278,58 @@
                     </tr>
                 </tbody>
             </table>
-            {% endif %}
+        </div>
+        {% endif %}
+
+        <div id="database" class="px-lg-4">
+            <section class="values p-0 mt-5">
+                <div class="container" data-aos="fade-up">
+                    <header class="section-header">
+                        <p>Database</p>
+                    </header>
+                </div>
+            </section><!-- End Values Section -->
+
+            <table class="table table-hover px-lg-2 result" data-aos="fade-up">
+                <thead>
+                    <tr>
+                        <th scope="col">Question</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if database %}
+                    {% for data in database %}
+                    <tr>
+                        <td id="question-{{ data.id }}" class="text-left">{{ data.question }}</td>
+                        <td>
+                            {% if data.image %}
+                            <a href="{{ data.image.url }}">
+                                <img width="120px" height="120px" src="{{ data.image.url }}" alt="Question Image">
+                            </a>
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a data-toggle="modal" data-target="#exampleModal" href="{% url 'UpdateQuestion' data.id %}">
+                                <img onclick="editQuestion('{{ data.id }}');" width="25px" height="25px" class="mx-2"
+                                    src="{% static 'Plagiarism_Seeker/assets/img/icons8-edit-64.png' %}" alt="Edit">
+                            </a>
+                            <a href="{% url 'DeleteQuestion' data.id %}">
+                                <img width="25px" height="25px" class="mx-2 deletequestion"
+                                    src="{% static 'Plagiarism_Seeker/assets/img/icons8-delete-64.png' %}" alt="Delete">
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No Data Available!</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
 
         <!-- ======= About Section ======= -->
@@ -295,7 +344,7 @@
                                 similar and even paraphrased,
                                 ensuring that your papers are always 100% plagiarism-free.</h2>
                             <p>
-                                We support all major file formats including doc, docx, pdf and many more. Our technology
+                                We support all major file formats including png, jpeg, gif and many more. Our technology
                                 scans the text in each file and checks if any identical or similar content has been
                                 found.
                             </p>
@@ -327,143 +376,108 @@
                 <div class="row gy-4">
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="service-box blue">
-                            <i class="ri-file-text-fill icon"></i>
-                            <h3>Text Plagiarism Seeker</h3>
-                            <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores
-                                iure perferendis tempore et consequatur.</p>
-                            <a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+                            <img width="60px" height="60px"
+                                src="{% static 'Plagiarism_Seeker/assets/img/file-text-fill.svg' %}"
+                                alt="File-Text-Fill">
+                            <h3 class="mt-4">Text Plagiarism Seeker</h3>
+                            <p>Text Plagiarism Seeker detect the identical or similar content and shows the percentage
+                                of duplicate content and original content.</p>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                         <div class="service-box orange">
-                            <i class="ri-image-line icon"></i>
-                            <h3>Image Text Plagiarism Seeker</h3>
-                            <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum
-                                hic non ut nesciunt dolorem.</p>
-                            <a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+                            <img width="60px" height="60px"
+                                src="{% static 'Plagiarism_Seeker/assets/img/image-line.png' %}" alt="Image-Line">
+                            <h3 class="mt-4">Image Text Plagiarism Seeker</h3>
+                            <p>Image Text Plagiarism Seeker detect the correct text from an image and checks Plagiarism
+                                into it.</p>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="service-box green">
-                            <i class="ri-file-list-3-line icon"></i>
-                            <h3>List of Unique Question set</h3>
-                            <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id
-                                voluptas adipisci eos earum corrupti.</p>
-                            <a href="#" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+                            <img width="60px" height="60px"
+                                src="{% static 'Plagiarism_Seeker/assets/img/file-list-3-line.svg' %}"
+                                alt="File-List-3-Line">
+                            <h3 class="mt-4">List of Unique Question set</h3>
+                            <p>List of Unique Question set Stored in the Database</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section><!-- End Services Section -->
 
-        <!-- ======= Contact Section ======= -->
-        <section id="contact" class="contact">
-            <div class="container" data-aos="fade-up">
-                <header class="section-header">
-                    <h2>Contact</h2>
-                    <p>Contact Us</p>
-                </header>
+        <!-- ======= Footer ======= -->
+        <footer id="footer" class="footer">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row gy-4">
+                        <div class="col-lg-5 col-md-12 footer-info">
+                            <a href="index.html" class="logo d-flex align-items-center">
+                                <img src="{% static 'Plagiarism_Seeker/assets/img/tempsnip.png' %}"
+                                    style="border-radius: 50%;" alt="">
+                                <span>Plagiarism Seeker</span>
+                            </a>
+                            <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna
+                                derita
+                                valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
 
-                <div class="row gy-4">
-                    <div class="col-lg-12">
-                        <div class="row gy-4">
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="bi bi-geo-alt"></i>
-                                    <h3>Address</h3>
-                                    <p>A108 Adam Street,<br>New York, NY 535022</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="bi bi-telephone"></i>
-                                    <h3>Call Us</h3>
-                                    <p>+1 5589 55488 55<br>+1 6678 254445 41</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="bi bi-envelope"></i>
-                                    <h3>Email Us</h3>
-                                    <p>info@example.com<br>contact@example.com</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class="bi bi-clock"></i>
-                                    <h3>Open Hours</h3>
-                                    <p>Monday - Friday<br>9:00AM - 05:00PM</p>
-                                </div>
-                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-6 footer-links">
+                            <h4>Useful Links</h4>
+                            <ul>
+                                <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
+                                <li><i class="bi bi-chevron-right"></i> <a href="#about">About us</a></li>
+                                <li><i class="bi bi-chevron-right"></i> <a href="#services">Services</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-2 col-6 footer-links"></div>
+
+                        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                            <h4>Contact Us</h4>
+                            <p>
+                                Shivaji Nagar <br>
+                                Pune, 411001<br>
+                                India <br><br>
+                                <strong>Phone:</strong> 8637123284<br>
+                                <strong>Email:</strong> info@example.com<br>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section><!-- End Contact Section -->
+        </footer><!-- End Footer -->
 
-    </main><!-- End #main -->
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+                class="bi bi-arrow-up-short"></i></a>
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row gy-4">
-                    <div class="col-lg-5 col-md-12 footer-info">
-                        <a href="index.html" class="logo d-flex align-items-center">
-                            <img src="{% static 'Plagiarism_Seeker/assets/img/tempsnip.png' %}"
-                                style="border-radius: 50%;" alt="">
-                            <span>Plagiarism Seeker</span>
-                        </a>
-                        <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita
-                            valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+        <!-- Vendor JS Files -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+        <script src="{% static 'Plagiarism_Seeker/assets/vendor/aos/aos.js' %}"></script>
+        <script src="{% static 'Plagiarism_Seeker/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+        <script src="{% static 'Plagiarism_Seeker/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+        <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
 
-                    </div>
+        <!-- Template Main JS File -->
+        <script src="{% static 'Plagiarism_Seeker/assets/js/main.js' %}"></script>
 
-                    <div class="col-lg-2 col-6 footer-links">
-                        <h4>Useful Links</h4>
-                        <ul>
-                            <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bi bi-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bi bi-chevron-right"></i> <a href="#">Services</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-2 col-6 footer-links"></div>
-
-                    <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-                        <h4>Contact Us</h4>
-                        <p>
-                            A108 Adam Street <br>
-                            New York, NY 535022<br>
-                            United States <br><br>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com<br>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer><!-- End Footer -->
-
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Vendor JS Files -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-    <script src="{% static 'Plagiarism_Seeker/assets/vendor/aos/aos.js' %}"></script>
-    <script src="{% static 'Plagiarism_Seeker/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-    <script src="{% static 'Plagiarism_Seeker/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/jquery.smartWizard.min.js"></script>
-
-    <!-- Template Main JS File -->
-    <script src="{% static 'Plagiarism_Seeker/assets/js/main.js' %}"></script>
-
+        <script>
+            const editQuestion = (id) => {
+                const questionId = document.getElementById(`question-${id}`);
+                const modalQuestion = document.getElementById('question_id');
+                modalQuestion.value = questionId.innerHTML;
+    
+                const questionForm = document.getElementById('question_form');
+                questionForm.action = `/update/${id}/`;
+            }
+        </script>
 </body>
 
 </html>
