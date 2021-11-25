@@ -107,7 +107,7 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Questions</h5> <button type="button"
+                            <h5 class="modal-title" id="exampleModalLabel">Add Question</h5> <button type="button"
                                 class="close" data-dismiss="modal" aria-label="Close"> <span
                                     aria-hidden="true">&times;</span> </button>
                         </div>
@@ -472,6 +472,8 @@
             const editQuestion = (id) => {
                 const questionId = document.getElementById(`question-${id}`);
                 const modalQuestion = document.getElementById('question_id');
+                const exampleModalLabel = document.getElementById('exampleModalLabel');
+                exampleModalLabel.innerHTML = "Edit Question";
                 modalQuestion.value = questionId.innerHTML;
     
                 const questionForm = document.getElementById('question_form');

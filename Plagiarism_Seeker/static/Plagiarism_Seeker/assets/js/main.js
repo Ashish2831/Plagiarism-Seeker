@@ -289,17 +289,20 @@
             showStepURLhash: false,
         });
 
-        const nextBtn = document.getElementsByClassName('btn-toolbar')[0].getElementsByClassName('sw-btn-next')[0];
-        const prevBtn = document.getElementsByClassName('btn-toolbar')[0].getElementsByClassName('sw-btn-prev')[0];
-
         const add = () => {
             const addBtn = document.getElementsByClassName('sw-btn-add')[0];
             if (addBtn) {
-                addBtn.addEventListener('click', () => {
+                addBtn.addEventListener('click', async () => {
                     const questionIError = document.getElementById('question_error');
                     const questionId = document.getElementById('question_id');
                     const imageId = document.getElementById('image_id');
                     const questionForm = document.getElementById('question_form');
+                    let checkDuplicate;
+
+                    if (questionId.value.length !== 0) {
+                        const res = await fetch(`/checkduplicate/${questionId.value}/`);
+                        checkDuplicate = await res.json();
+                    }
 
                     if (questionId.value.length === 0) {
                         questionIError.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -308,6 +311,13 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>`
+                    } else if (checkDuplicate.message !== "None") {
+                        questionIError.innerHTML = `<div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <strong>Info!</strong> Question Already Exists!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`
                     } else {
                         if (imageId.files.length !== 0) {
                             const allowed_types = ["image/bmp", "image/gif", "image/jpeg", "image/svg+xml", "image/tiff", "image/webp", "image/apng", "image/avif", "image/png"]
@@ -350,7 +360,11 @@
         })
 
         document.getElementById('launchModalBtn').addEventListener('click', () => {
+            const questionForm = document.getElementById('question_form');
             questionForm.action = '';
+
+            const exampleModalLabel = document.getElementById('exampleModalLabel');
+            exampleModalLabel.innerHTML = "Add Question";
         })
     });
 })();

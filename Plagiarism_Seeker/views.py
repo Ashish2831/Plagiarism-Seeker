@@ -1,4 +1,4 @@
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.generic.base import View
 from .models import Question
@@ -7,8 +7,6 @@ import requests
 import easyocr
 
 # Create your views here.
-
-
 class QuestionView(View):
     def get(self, request):
         database = Question.objects.all()
@@ -128,3 +126,14 @@ class DeleteQuestion(View):
         question = Question.objects.get(pk=id)
         question.delete()
         return HttpResponseRedirect('/')
+
+
+class CheckDuplicate(View):
+    def get(self, request, ques):
+        try:
+            question = Question.objects.get(question=f"{ques}?")
+            return JsonResponse({"message" : f"{question.question}"})
+        except:
+            return JsonResponse({"message" : "None"})
+            
+    
